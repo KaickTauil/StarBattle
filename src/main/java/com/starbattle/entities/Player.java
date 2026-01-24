@@ -23,8 +23,16 @@ public abstract class Player{
         this.clife = mlife;
     }
 
+    public String getName(){
+        return name;
+    }
+
     public int getAtk(){
         return atk;
+    }
+
+    public int getClife(){
+        return clife;
     }
 
     public abstract void attack(Player target);
