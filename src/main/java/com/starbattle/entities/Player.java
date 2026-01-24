@@ -35,6 +35,10 @@ public abstract class Player{
         return clife;
     }
 
+    public String getTeam(){
+        return team;
+    }
+
     public abstract void attack(Player target);
 
     public void recieveAttack(double  dam){
