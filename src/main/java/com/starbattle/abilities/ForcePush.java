@@ -7,7 +7,7 @@ public class ForcePush implements SpecialSkill{
     private final int manaCost = 20;
     
     @Override
-    public String getNome(){
+    public String getName(){
         return "force push";
     }
 
@@ -23,6 +23,7 @@ public class ForcePush implements SpecialSkill{
             double finalDmg = user.getAtk() * 2.5;
             System.out.println("Force push !!!!\n==Force push dealed "+finalDmg+" damage!==");
             target.recieveAttack(finalDmg);
+            manaUser.consumeMana(manaCost);
         }
         
     }

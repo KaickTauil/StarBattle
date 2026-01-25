@@ -5,7 +5,7 @@ import java.util.Random;
 public class Clone extends Player{
     private int crit;
 
-    public Clone(String n, String t){
+    public Clone(String n, Team t){
         super(n, 160,30,70,t);
         this.crit = 45;
     }

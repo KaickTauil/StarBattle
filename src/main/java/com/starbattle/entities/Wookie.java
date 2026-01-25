@@ -4,7 +4,7 @@ public class Wookie extends Player{
     private final int maxVim;
     private int vim;
 
-    public Wookie(String n, String t){
+    public Wookie(String n, Team t){
         super(n, 250, 50, 20, t);
         this.maxVim = 100;
         vim = maxVim;

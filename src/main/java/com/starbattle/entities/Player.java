@@ -3,6 +3,7 @@ package com.starbattle.entities;
 import com.starbattle.abilities.SpecialSkill;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public abstract class Player{
     protected String name;
@@ -10,11 +11,11 @@ public abstract class Player{
     protected int clife;
     protected int def;
     protected int atk;
-    protected final String team;
+    protected final Team team;
     protected List<SpecialSkill> skills =  new ArrayList<>();
 
 
-    public Player(String n, int l, int de, int at, String t){
+    public Player(String n, int l, int de, int at, Team t){
         this.name = n;
         this.mlife = l;
         this.def = de;
@@ -35,8 +36,12 @@ public abstract class Player{
         return clife;
     }
 
-    public String getTeam(){
+    public Team getTeam(){
         return team;
+    }
+
+    public boolean hasSkill(){
+        return skills.size() > 0;
     }
 
     public abstract void attack(Player target);
@@ -46,14 +51,23 @@ public abstract class Player{
 
         if(finalDam > 0){
             clife -= finalDam;
-            System.out.println("Ouch");
+            System.out.println(name + ": Ouch");
         }else{
-            System.out.println("O que foi esse vento?");
+            System.out.println(name +": O que foi esse vento?");
         }
     }
 
-    public void useSkill(int skillIdx, Player target){
-        SpecialSkill skill = skills.get(skillIdx);
+    public void useSkill(Player target){
+        String txt = "";
+        Scanner input = new Scanner(System.in);
+        for(SpecialSkill s : skills){
+            int i = 1;
+            txt = i + "- " + s.getName() + "\n";
+        }
+        System.out.println("Selecione a skill que deseja usar: \n"+txt);
+        int i = input.nextInt();
+
+        SpecialSkill skill = skills.get(i-1);
         skill.execute(this, target);
     }
 }

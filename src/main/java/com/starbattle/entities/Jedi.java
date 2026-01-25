@@ -6,7 +6,7 @@ public class Jedi extends Player implements ManaUser{
     private final float maxMana;
     private float mana;
 
-    public Jedi(String n, String t){
+    public Jedi(String n, Team t){
         super(n, 160, 25, 30, t);
         this.maxMana = 200;
         this.mana = maxMana;
