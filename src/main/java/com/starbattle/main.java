@@ -12,12 +12,14 @@ public class main{
         Player j1 = new Jedi("kaick", Team.LIGHT);
         Player j2 = new Wookie("Chewe", Team.DARK);
         Player j3 = new Clone("Rex", Team.LIGHT);
+        Player j4 = new Jedi("Anakin", Team.DARK);
 
         Arena arena = new Arena();
 
         arena.addPlayer(j3, j3.getTeam());
         arena.addPlayer(j2, j2.getTeam());
         arena.addPlayer(j1, j1.getTeam());
+        arena.addPlayer(j4, j4.getTeam());
 
         System.out.println("============== BEM VINDOS À ARENA !! ===================");
         System.out.println("TIME DA LUZ: "+arena.getPlayers(Team.LIGHT));
@@ -25,17 +27,13 @@ public class main{
         System.out.println("\n______________________________________________________________________________\n");
         
         gameloop:
-        while(arena.match()){
+        while(true){
             System.out.println("=====> ROUND "+arena.getRound());
 
-                roundloop:
                 for(Team t : Team.values()){
                 for(Player p : arena.getPlayers(t)){
                     Player target = arena.getTarget(t);
-                    if(target == null){
-                        break roundloop;
-                    }
-                    System.out.println("VEZ DO JOGADOR "+p.getName()+", seu alvo é "+target.getName()+"!!!\nO que quer fazer?\n1-Atacar\n2-Usar skill\n3- Pular vez");
+                    System.out.println("\nVEZ DO JOGADOR "+p.getName()+", seu alvo é "+target.getName()+"!!!\nO que quer fazer?\n1-Atacar\n2-Usar skill\n3- Pular vez");
                     int act = input.nextInt();
                     switch (act) {
                         case 1 -> p.attack(target);
@@ -48,6 +46,10 @@ public class main{
                             }
                         }
                         default -> System.out.println(p.getName() + ": Melhor deixar pra la...");
+                    }
+                    if(!arena.matchOngoing()){
+                        arena.winner();
+                        break gameloop;
                     }
                 }
             }

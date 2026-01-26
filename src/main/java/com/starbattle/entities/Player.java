@@ -41,7 +41,11 @@ public abstract class Player{
     }
 
     public boolean hasSkill(){
-        return skills.size() > 0;
+        return !skills.isEmpty();
+    }
+
+    public boolean isAlive(){
+        return clife > 0;
     }
 
     public abstract void attack(Player target);
@@ -58,6 +62,7 @@ public abstract class Player{
     }
 
     public void useSkill(Player target){
+
         String txt = "";
         Scanner input = new Scanner(System.in);
         for(SpecialSkill s : skills){

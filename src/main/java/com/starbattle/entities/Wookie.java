@@ -12,7 +12,7 @@ public class Wookie extends Player{
 
     @Override
     public void attack(Player target){
-        System.out.println("HWAAAAAARR");
+        System.out.println(name + ": HWAAAAAARR");
         target.recieveAttack(atk);
     }
 
@@ -26,9 +26,9 @@ public class Wookie extends Player{
                 vim = 0;
             }
             clife -= finalDam;
-            System.out.println("HWOOOORRRRRR");
+            System.out.println(name + ": HWOOOORRRRRR");
         }else{
-            System.out.println("Hwar?");
+            System.out.println(name + ": Hwar?");
         }
     }
 }

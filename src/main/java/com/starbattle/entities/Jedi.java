@@ -20,7 +20,7 @@ public class Jedi extends Player implements ManaUser{
 
     @Override
     public void attack(Player target){
-        System.out.println("O jedi" + name +"está atacando com seu sabre!");
+        System.out.println("O jedi " + name +" está atacando com seu sabre!");
         target.recieveAttack(atk);
     }
 

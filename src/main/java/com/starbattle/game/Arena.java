@@ -28,6 +28,10 @@ public class Arena {
         teams.get(t).add(p);
     }
 
+    public void removePlayer(Player p, Team t){
+        teams.get(t).remove(p);
+    }
+
     public List<Player> getPlayers(Team t){
         return teams.get(t);
     }
@@ -43,16 +47,23 @@ public class Arena {
     }
 
     public void nextRound(){
-        if(!match()){
-            System.out.println("O time " + winner + "triunfou sobre seus inimigos !!\nA arena os consagra vencedores.");
-            return;
-        }
         round++;
         System.out.println("Round "+round+" iniciado!");
     }
 
-    public boolean match(){
+    public boolean matchOngoing(){
         return playersAlive(Team.LIGHT) > 0 && playersAlive(Team.DARK) > 0;
+
+    }
+
+    public void winner(){
+        if(playersAlive(Team.DARK) > 0 && playersAlive(Team.LIGHT) == 0){
+            winner = Team.DARK;
+            System.out.println("O time " + winner.name() + " triunfou sobre seus inimigos !!\nA arena os consagra vencedores.");
+        }else if(playersAlive(Team.LIGHT) > 0 && playersAlive(Team.DARK) == 0){
+            winner = Team.LIGHT;
+            System.out.println("O time " + winner.name() + " triunfou sobre seus inimigos !!\nA arena os consagra vencedores.");
+        }
     }
 
     public Player getTarget(Team t){
@@ -61,12 +72,13 @@ public class Arena {
         for(Player p : teams.get(t.next())){
             if(p.getClife() > 0){
                 alive.add(p);
+            }else{
+                removePlayer(p, t);
             }
         }
 
         if(alive.isEmpty()){
             winner = t;
-            return null;
         }
 
         int i = ThreadLocalRandom.current().nextInt(alive.size());
