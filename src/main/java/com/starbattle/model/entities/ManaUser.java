@@ -1,4 +1,4 @@
-package com.starbattle.entities;
+package com.starbattle.model.entities;
 
 public interface ManaUser {
     float getmana();

@@ -1,4 +1,4 @@
-package com.starbattle.entities;
+package com.starbattle.model.entities;
 
 import java.util.Random;
 
@@ -12,17 +12,25 @@ public class Clone extends Player{
 
     @Override
     public void attack(Player target){
-        System.out.println(name + ": Na mira.");
-
         Random rd = new Random();
         boolean critHit = rd.nextDouble() < 0.35;
         if(critHit){
             double dmg = atk*(1 + crit/100);
-            System.out.println(name + ": Headshot.\n===O clone "+this.getName()+" causou um golpe crítico de "+dmg+" de dano!===");
             target.recieveAttack(dmg);
         }else{
             target.recieveAttack(atk);
         }
         
+    }
+
+    @Override
+    public String attackDesc(){
+        Random rd = new Random();
+        boolean critHit = rd.nextDouble() < 0.35;
+        if(critHit){
+            return name + ": Headshot.";
+        }else{
+            return name + ": Na mira.";
+        }
     }
 }

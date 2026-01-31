@@ -1,9 +1,8 @@
-package com.starbattle.entities;
+package com.starbattle.model.entities;
 
-import com.starbattle.abilities.SpecialSkill;
+import com.starbattle.model.abilities.SpecialSkill;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public abstract class Player{
     protected String name;
@@ -11,7 +10,7 @@ public abstract class Player{
     protected int clife;
     protected int def;
     protected int atk;
-    protected final Team team;
+    protected Team team;
     protected List<SpecialSkill> skills =  new ArrayList<>();
 
 
@@ -22,6 +21,14 @@ public abstract class Player{
         this.atk = at;
         this.team = t;
         this.clife = mlife;
+    }
+
+    public void setName(String n){
+        this.name = n;
+    }
+
+    public void setTeam(Team t){
+        this.team = t;
     }
 
     public String getName(){
@@ -44,6 +51,10 @@ public abstract class Player{
         return !skills.isEmpty();
     }
 
+    public List<SpecialSkill> getSkills(){
+        return skills;
+    }
+
     public boolean isAlive(){
         return clife > 0;
     }
@@ -55,24 +66,26 @@ public abstract class Player{
 
         if(finalDam > 0){
             clife -= finalDam;
-            System.out.println(name + ": Ouch");
-        }else{
-            System.out.println(name +": O que foi esse vento?");
         }
     }
 
-    public void useSkill(Player target){
-
-        String txt = "";
-        Scanner input = new Scanner(System.in);
-        for(SpecialSkill s : skills){
-            int i = 1;
-            txt = i + "- " + s.getName() + "\n";
-        }
-        System.out.println("Selecione a skill que deseja usar: \n"+txt);
-        int i = input.nextInt();
-
-        SpecialSkill skill = skills.get(i-1);
+    public void useSkill(Player target, int i){
+        SpecialSkill skill = skills.get(i);
         skill.execute(this, target);
     }
+
+    public String attackDesc(){
+        return "Sistema: " + name + " esta atacando!";
+    }
+
+    public String damageDesc(double dam){
+        double finalDam = dam * (1 - def/100);
+
+        if(finalDam > 0){
+            return name + ": Ouch";
+        }else{
+            return name +": O que foi esse vento?";
+        }
+    }
+
 }

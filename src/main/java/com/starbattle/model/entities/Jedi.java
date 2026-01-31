@@ -1,6 +1,6 @@
-package com.starbattle.entities;
+package com.starbattle.model.entities;
 
-import com.starbattle.abilities.ForcePush;
+import com.starbattle.model.abilities.ForcePush;
 
 public class Jedi extends Player implements ManaUser{
     private final float maxMana;
@@ -20,12 +20,16 @@ public class Jedi extends Player implements ManaUser{
 
     @Override
     public void attack(Player target){
-        System.out.println("O jedi " + name +" está atacando com seu sabre!");
         target.recieveAttack(atk);
     }
 
     @Override
     public void consumeMana(int quantity){
         mana -= quantity;
+    }
+
+    @Override
+    public String attackDesc(){
+        return "SISTEMA: O Jedi " + name + "está atacando com seu sabre!";
     }
 }

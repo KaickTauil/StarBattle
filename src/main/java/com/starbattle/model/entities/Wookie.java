@@ -1,4 +1,4 @@
-package com.starbattle.entities;
+package com.starbattle.model.entities;
 
 public class Wookie extends Player{
     private final int maxVim;
@@ -12,7 +12,6 @@ public class Wookie extends Player{
 
     @Override
     public void attack(Player target){
-        System.out.println(name + ": HWAAAAAARR");
         target.recieveAttack(atk);
     }
 
@@ -26,9 +25,22 @@ public class Wookie extends Player{
                 vim = 0;
             }
             clife -= finalDam;
-            System.out.println(name + ": HWOOOORRRRRR");
+        }
+    }
+
+    @Override
+    public String attackDesc(){
+        return name + ": HWAAAAAARR";
+    }
+
+    @Override
+    public String damageDesc(double dam){
+        double finalDam = dam * (1 - def/100);
+
+        if(finalDam > 0){
+            return name + ": HWOOOORRRRRR";
         }else{
-            System.out.println(name + ": Hwar?");
+            return name +": Hwar??";
         }
     }
 }
