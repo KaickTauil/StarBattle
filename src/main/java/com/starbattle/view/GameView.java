@@ -11,15 +11,21 @@ public class GameView {
     private Scanner input = new Scanner(System.in);
 
     public boolean lobby(){
-        System.out.println("========= BEM VINDOS À ARENA!! =========\nO que deseja fazer?\n1- Iniciar partida\n2- Sair");
-        int op = Integer.parseInt(input.nextLine());
+        while(true){
+            System.out.println("========= BEM VINDOS À ARENA!! =========\nO que deseja fazer?\n1- Iniciar partida\n2- Sair");
+            try {
+                int op = Integer.parseInt(input.nextLine());
 
-        if (op == 1) {
-            System.out.println("Ótimo!! Vamos iniciar adicionando os combatentes: \n");
-            return true;
-        }else{
-            return false;
-        }     
+                if (op == 1) {
+                    System.out.println("Ótimo!! Vamos iniciar adicionando os combatentes: ");
+                    return true;
+                }else{
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("##################### Informe um valor numérico válido #####################");
+            }
+        }
     }
     
     public String requestName(){
@@ -28,18 +34,40 @@ public class GameView {
     }
 
     public Team requestTeam(){
-        System.out.println("---> Insira o time do jogador ("+ Team.LIGHT.name() + " | " + Team.DARK.name() + "):");
-        return Team.valueOf(input.nextLine().toUpperCase());
+        while(true){
+            try {
+                System.out.println("---> Insira o time do jogador ("+ Team.LIGHT.name() + " | " + Team.DARK.name() + "):");
+                return Team.valueOf(input.nextLine().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("##################### Informe um tipo válido de time: ("+ Team.listTeams() +") #####################");
+            }
+        }
     }
 
     public PlayerClass requestClass(){
-        System.out.println("Selecione a classe do jogador: (Jedi | Wookie | Clone)");
-        return PlayerClass.valueOf(input.nextLine().toUpperCase());
+        while (true) { 
+            try {
+                System.out.println("Selecione a classe do jogador: (Jedi | Wookie | Clone)");
+                return PlayerClass.valueOf(input.nextLine().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Informe um tipo válido de time: ("+ PlayerClass.listClasses() +")");
+            }
+        }
+    }
+
+    public void createdPlayerMessage(){
+        System.out.println("\nO jogador foi criado!!\n");
     }
 
     public int secondMenu(){
-        System.out.println("\nO jogador foi criado!!\n\nO que deseja fazer agora?\n1- Cadastrar novo jogador\n2- Iniciar partida\n3- Sair");
-        return Integer.parseInt(input.nextLine());
+        while(true){
+            try {
+                System.out.println("\nO que deseja fazer agora?\n1- Cadastrar novo jogador\n2- Iniciar partida\n3- Sair");
+                return Integer.parseInt(input.nextLine());
+            }catch (NumberFormatException e) {
+                System.out.println("##################### Informe um valor numérico válido #####################");
+            }
+        } 
     }
 
     public void goodbyeMessage(){
@@ -47,7 +75,7 @@ public class GameView {
     }
     
     public void showRound(int round){
-        System.out.println("=====> ROUND "+ round);
+        System.out.println("\n=====> ROUND "+ round);
     }
 
     public void roundInit(int round){
@@ -55,29 +83,41 @@ public class GameView {
     }
 
     public int getAction(Player user, Player target){
-        int act;
-        
-        if(user.getSkills() != null){
-            System.out.println("\n---> PLAYER:  "+user.getName()+"\n---> ALVO: "+target.getName()+"!!!\nO que quer fazer?\n1-Atacar\n2-Usar skill\n3- Pular vez");
-            act = Integer.parseInt(input.nextLine());
-        }else{
-            System.out.println("\n---> PLAYER:  "+user.getName()+"\n---> ALVO: "+target.getName()+"!!!\nO que quer fazer?\n1-Atacar\n2- Pular vez");
-            act = Integer.parseInt(input.nextLine());
+        while (true) { 
+            int act;
+
+            try {
+                if(user.getSkills() != null){
+                    System.out.println("\n---> PLAYER:  "+user.getName()+"\n---> ALVO: "+target.getName()+"!!!\nO que quer fazer?\n1-Atacar\n2-Usar skill\n3- Pular vez");
+                    act = Integer.parseInt(input.nextLine());
+                }else{
+                    System.out.println("\n---> PLAYER:  "+user.getName()+"\n---> ALVO: "+target.getName()+"!!!\nO que quer fazer?\n1-Atacar\n2- Pular vez");
+                    act = Integer.parseInt(input.nextLine());
+                }
+                return act;
+
+            } catch (NumberFormatException e) {
+                System.out.println("##################### Informe um valor numérico válido #####################");
+            }
         }
-        
-        return act;
     }
 
     public int getSkill(Player user){
-        String txt = "";
-        for(SpecialSkill s : user.getSkills()){
-            int i = 1;
-            txt = i + "- " + s.getName() + "\n";
-        }
-        System.out.println("Selecione a skill que deseja usar: \n"+txt);
-        int i = Integer.parseInt(input.nextLine());
+       while (true) { 
+            try {
+                String txt = "";
+                for(SpecialSkill s : user.getSkills()){
+                    int i = 1;
+                    txt = i + "- " + s.getName() + "\n";
+                }
+                System.out.println("Selecione a skill que deseja usar: \n"+txt);
+                int i = Integer.parseInt(input.nextLine());
 
-        return i-1;
+                return i-1;            
+            } catch (NumberFormatException e) {
+                System.out.println("##################### Informe um valor numérico válido #####################");
+            }
+       }
     }
 
     public void attackMessage(Player user){

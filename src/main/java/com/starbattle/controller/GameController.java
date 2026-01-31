@@ -44,6 +44,8 @@ public class GameController {
 
             arena.addPlayer(PlayerFactory.create(type, name, team), team); 
 
+            view.createdPlayerMessage();
+
             int op = view.secondMenu();
 
             if(op ==  2){

@@ -7,4 +7,13 @@ public enum Team {
     public Team next(){
         return values()[(ordinal() + 1) % values().length];
     }
+
+    public static String listTeams(){
+        String txt = "";
+        for(Team t : Team.values()){
+            txt += t.name() +", ";
+        }
+
+        return txt;
+    }
 }
