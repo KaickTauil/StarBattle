@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.starbattle.model.entities.CloneTest" time="0.008" tests="4" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.starbattle.model.entities.PlayerTest" time="0.013" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -59,8 +59,10 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="attackDesc_shouldReturnValidMessage" classname="com.starbattle.model.entities.CloneTest" time="0.001"/>
-  <testcase name="clone_shouldStartAlive" classname="com.starbattle.model.entities.CloneTest" time="0.002"/>
-  <testcase name="attack_shouldReduceTargetLife" classname="com.starbattle.model.entities.CloneTest" time="0.001"/>
-  <testcase name="clone_shouldHaveCorrectTeam" classname="com.starbattle.model.entities.CloneTest" time="0.001"/>
+  <testcase name="useSkill_shouldExecuteSkill" classname="com.starbattle.model.entities.PlayerTest" time="0.0"/>
+  <testcase name="isAlive_shouldReturnTrueWhenLifeAboveZero" classname="com.starbattle.model.entities.PlayerTest" time="0.001"/>
+  <testcase name="recieveAttack_shouldNotReduceLifeWhenFinalDamageIsZero" classname="com.starbattle.model.entities.PlayerTest" time="0.002"/>
+  <testcase name="player_shouldStartWithFullLife" classname="com.starbattle.model.entities.PlayerTest" time="0.002"/>
+  <testcase name="recieveAttack_shouldReduceLifeConsideringDefense" classname="com.starbattle.model.entities.PlayerTest" time="0.001"/>
+  <testcase name="hasSkill_shouldReturnFalseWhenNoSkills" classname="com.starbattle.model.entities.PlayerTest" time="0.001"/>
 </testsuite>
