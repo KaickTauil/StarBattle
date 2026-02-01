@@ -1,12 +1,13 @@
 package com.starbattle.model.game;
 
-import com.starbattle.model.entities.Player;
-import com.starbattle.model.entities.Team;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+
+import com.starbattle.model.entities.Player;
+import com.starbattle.model.entities.Team;
 
 public class Arena {
     private final Map<Team, List<Player>> teams = new HashMap<>();
@@ -23,6 +24,9 @@ public class Arena {
 
     public void reset(){
         teams.clear();
+        for(Team t : Team.values()){
+            teams.put(t, new ArrayList<>());
+        }
         round = 1;
     }
 
