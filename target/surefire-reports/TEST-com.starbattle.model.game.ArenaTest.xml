@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.starbattle.controller.GameControllerTest" time="0.088" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.starbattle.model.game.ArenaTest" time="0.025" tests="7" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="BR"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-25\bin"/>
-    <property name="sun.java.command" value="C:\Users\Kaick\AppData\Local\Temp\surefire4251621433030172498\surefirebooter-20260201154703011_3.jar C:\Users\Kaick\AppData\Local\Temp\surefire4251621433030172498 2026-02-01T15-47-02_880-jvmRun1 surefire-20260201154703011_1tmp surefire_0-20260201154703011_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Kaick\AppData\Local\Temp\surefire4196786657184925630\surefirebooter-20260201153934877_3.jar C:\Users\Kaick\AppData\Local\Temp\surefire4196786657184925630 2026-02-01T15-39-34_727-jvmRun1 surefire-20260201153934877_1tmp surefire_0-20260201153934877_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\Kaick\Documents\Star Battle\target\test-classes;C:\Users\Kaick\Documents\Star Battle\target\classes;C:\Users\Kaick\.m2\repository\org\junit\jupiter\junit-jupiter\6.0.2\junit-jupiter-6.0.2.jar;C:\Users\Kaick\.m2\repository\org\junit\jupiter\junit-jupiter-api\6.0.2\junit-jupiter-api-6.0.2.jar;C:\Users\Kaick\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Kaick\.m2\repository\org\junit\platform\junit-platform-commons\6.0.2\junit-platform-commons-6.0.2.jar;C:\Users\Kaick\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Kaick\.m2\repository\org\jspecify\jspecify\1.0.0\jspecify-1.0.0.jar;C:\Users\Kaick\.m2\repository\org\junit\jupiter\junit-jupiter-params\6.0.2\junit-jupiter-params-6.0.2.jar;C:\Users\Kaick\.m2\repository\org\junit\jupiter\junit-jupiter-engine\6.0.2\junit-jupiter-engine-6.0.2.jar;C:\Users\Kaick\.m2\repository\org\junit\platform\junit-platform-engine\6.0.2\junit-platform-engine-6.0.2.jar;C:\Users\Kaick\.m2\repository\org\mockito\mockito-core\5.7.0\mockito-core-5.7.0.jar;C:\Users\Kaick\.m2\repository\net\bytebuddy\byte-buddy\1.14.9\byte-buddy-1.14.9.jar;C:\Users\Kaick\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.9\byte-buddy-agent-1.14.9.jar;C:\Users\Kaick\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\Kaick\.m2\repository\org\mockito\mockito-junit-jupiter\5.7.0\mockito-junit-jupiter-5.7.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Kaick\AppData\Local\Temp\surefire4251621433030172498\surefirebooter-20260201154703011_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Kaick\AppData\Local\Temp\surefire4196786657184925630\surefirebooter-20260201153934877_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="25.0.1+8-LTS-27"/>
@@ -59,17 +59,11 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="initGame_shouldExitWhenLobbyReturnsFalse" classname="com.starbattle.controller.GameControllerTest" time="0.038"/>
-  <testcase name="registerPlayer_shouldReturnSTARTWhenUserChoosesStart" classname="com.starbattle.controller.GameControllerTest" time="0.024">
-    <system-out><![CDATA[
-O jogador foi criado!!
-
-]]></system-out>
-  </testcase>
-  <testcase name="registerPlayer_shouldReturnEXITWhenUserChoosesExit" classname="com.starbattle.controller.GameControllerTest" time="0.003">
-    <system-out><![CDATA[
-O jogador foi criado!!
-
-]]></system-out>
-  </testcase>
+  <testcase name="winner_shouldReturnLightWhenDarkDies" classname="com.starbattle.model.game.ArenaTest" time="0.002"/>
+  <testcase name="matchOngoing_shouldReturnTrueWhenBothTeamsAlive" classname="com.starbattle.model.game.ArenaTest" time="0.002"/>
+  <testcase name="matchOngoing_shouldReturnFalseWhenOneTeamDies" classname="com.starbattle.model.game.ArenaTest" time="0.003"/>
+  <testcase name="nextRound_shouldIncreaseRoundNumber" classname="com.starbattle.model.game.ArenaTest" time="0.001"/>
+  <testcase name="playersAlive_shouldReturnOnlyAlivePlayers" classname="com.starbattle.model.game.ArenaTest" time="0.002"/>
+  <testcase name="addPlayer_shouldAddPlayerToCorrectTeam" classname="com.starbattle.model.game.ArenaTest" time="0.002"/>
+  <testcase name="arenaShouldStartAtRoundOne" classname="com.starbattle.model.game.ArenaTest" time="0.002"/>
 </testsuite>
