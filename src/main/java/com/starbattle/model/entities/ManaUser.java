@@ -6,6 +6,6 @@ public interface ManaUser {
     void consumeMana(int quantity);
 
     default boolean hasMana(int quantity){
-        return getmana() >= 0;
+        return getmana() >= quantity;
     }
 }

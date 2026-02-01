@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.starbattle.controller.GameControllerTest" time="0.068" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.starbattle.factory.PlayerFactoryTest" time="0.016" tests="4" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -59,17 +59,8 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="initGame_shouldExitWhenLobbyReturnsFalse" classname="com.starbattle.controller.GameControllerTest" time="0.034"/>
-  <testcase name="registerPlayer_shouldReturnSTARTWhenUserChoosesStart" classname="com.starbattle.controller.GameControllerTest" time="0.012">
-    <system-out><![CDATA[
-O jogador foi criado!!
-
-]]></system-out>
-  </testcase>
-  <testcase name="registerPlayer_shouldReturnEXITWhenUserChoosesExit" classname="com.starbattle.controller.GameControllerTest" time="0.001">
-    <system-out><![CDATA[
-O jogador foi criado!!
-
-]]></system-out>
-  </testcase>
+  <testcase name="create_shouldThrowExceptionWhenClassIsNull" classname="com.starbattle.factory.PlayerFactoryTest" time="0.005"/>
+  <testcase name="create_shouldCreateWookie" classname="com.starbattle.factory.PlayerFactoryTest" time="0.002"/>
+  <testcase name="create_shouldCreateJedi" classname="com.starbattle.factory.PlayerFactoryTest" time="0.002"/>
+  <testcase name="create_shouldCreateClone" classname="com.starbattle.factory.PlayerFactoryTest" time="0.002"/>
 </testsuite>
