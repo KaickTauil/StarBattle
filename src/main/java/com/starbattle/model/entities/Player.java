@@ -1,8 +1,9 @@
 package com.starbattle.model.entities;
 
-import com.starbattle.model.abilities.SpecialSkill;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.starbattle.model.abilities.SpecialSkill;
 
 public abstract class Player{
     protected String name;
@@ -49,6 +50,10 @@ public abstract class Player{
 
     public boolean hasSkill(){
         return !skills.isEmpty();
+    }
+
+    public SpecialSkill getSkill(int i){
+        return skills.get(i);
     }
 
     public List<SpecialSkill> getSkills(){

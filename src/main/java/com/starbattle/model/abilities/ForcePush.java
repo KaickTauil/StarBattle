@@ -11,11 +11,14 @@ public class ForcePush implements SpecialSkill{
         return "force push";
     }
 
+    private double finalDmgCalc(Player p){
+        return (p.getAtk() * 2.5);
+    }
+
     @Override
     public void execute(Player user, Player target){
         if(user instanceof ManaUser manaUser && manaUser.hasMana(manaCost)){
-            double finalDmg = user.getAtk() * 2.5;
-            target.recieveAttack(finalDmg);
+            target.recieveAttack(finalDmgCalc(user));
             manaUser.consumeMana(manaCost);
         }
     }
@@ -23,5 +26,15 @@ public class ForcePush implements SpecialSkill{
     @Override
     public String skillDesc(Player user, double dmg){
         return user.getName() + ": Force push !!!!\n==SISTEMA: Force push causou "+ dmg +" de dano!==";
+    }
+
+    @Override
+    public double getDamage(Player p){
+        return finalDmgCalc(p);
+    }
+
+    @Override
+    public int getManaCost(){
+        return manaCost;
     }
 }

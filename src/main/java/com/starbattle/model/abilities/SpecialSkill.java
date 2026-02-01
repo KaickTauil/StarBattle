@@ -8,4 +8,8 @@ public interface SpecialSkill {
     void execute(Player user, Player target);
 
     String skillDesc(Player user, double dmg);
+
+    double getDamage(Player p);
+
+    int getManaCost();
 }

@@ -82,9 +82,17 @@ public class GameController {
                         } 
                         case 2 -> {
                             int i = view.getSkill(p);
-                            p.useSkill(target, i);
+                            if(i == -1){
+                                p.attack(target);
+                                view.attackMessage(p);
+                            }else{
+                                p.useSkill(target, i);
+                                view.skillMessage(p, p.getSkill(i), p.getSkill(i).getDamage(p), p.getSkill(i).getManaCost());
+                            }
                         }
-                        default -> view.skipTurn(p);
+                        case 3 -> {
+                            view.skipTurn(p);
+                        }
                     }
 
                     if(!arena.matchOngoing()){

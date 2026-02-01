@@ -1,11 +1,12 @@
 package com.starbattle.view;
 
+import java.util.Scanner;
+
 import com.starbattle.factory.PlayerClass;
 import com.starbattle.model.abilities.SpecialSkill;
 import com.starbattle.model.entities.ManaUser;
 import com.starbattle.model.entities.Player;
 import com.starbattle.model.entities.Team;
-import java.util.Scanner;
 
 public class GameView {
     private Scanner input = new Scanner(System.in);
@@ -105,15 +106,20 @@ public class GameView {
     public int getSkill(Player user){
        while (true) { 
             try {
-                String txt = "";
-                for(SpecialSkill s : user.getSkills()){
-                    int i = 1;
-                    txt = i + "- " + s.getName() + "\n";
-                }
-                System.out.println("Selecione a skill que deseja usar: \n"+txt);
-                int i = Integer.parseInt(input.nextLine());
+                if(user instanceof ManaUser manaUser){
+                    String txt = "";
+                    for(SpecialSkill s : user.getSkills()){
+                        int i = 1;
+                        txt = i + "- " + s.getName() + "\n";
+                    }
+                    System.out.println("Selecione a skill que deseja usar: \n"+txt);
+                    int i = Integer.parseInt(input.nextLine());
 
-                return i-1;            
+                    return i-1;
+                }else{
+                    System.out.println("SISTEMA: Ops... parece que você não tem nenhuma skill ativa, realizando um ataque normal !");
+                    return -1;
+                }
             } catch (NumberFormatException e) {
                 System.out.println("##################### Informe um valor numérico válido #####################");
             }
@@ -121,13 +127,12 @@ public class GameView {
     }
 
     public void attackMessage(Player user){
-        user.attackDesc();
+        System.out.println(user.attackDesc());
     }
 
     public void skillMessage(Player user,SpecialSkill skill,double dmg, int manaCost){
         if(!(user instanceof ManaUser manaUser)){
             System.out.println("SISTEMA: O combatente tem que ser um usuário de mana para usar isso !");
-
         }else if(!manaUser.hasMana(manaCost)){
             System.out.println("SISTEMA: Você não tem mana o suficiente!");
             
