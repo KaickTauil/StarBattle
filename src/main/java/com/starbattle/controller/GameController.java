@@ -11,6 +11,8 @@ public class GameController {
     private Arena arena = new Arena();
     private GameView view = new GameView();
 
+    public GameController(){}
+    
     //construtor para testes
     public GameController(Arena a, GameView v){
         this.arena = a;
