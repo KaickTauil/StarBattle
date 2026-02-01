@@ -11,6 +11,12 @@ public class GameController {
     private Arena arena = new Arena();
     private GameView view = new GameView();
 
+    //construtor para testes
+    public GameController(Arena a, GameView v){
+        this.arena = a;
+        this.view = v;
+    }
+
     public void initGame(){
         boolean running = true;
 

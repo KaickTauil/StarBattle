@@ -1,0 +1,15 @@
+com\starbattle\model\game\Arena.class
+com\starbattle\factory\PlayerFactory.class
+com\starbattle\view\GameView.class
+com\starbattle\main.class
+com\starbattle\model\abilities\ForcePush.class
+com\starbattle\controller\RegisterResult.class
+com\starbattle\model\entities\Jedi.class
+com\starbattle\model\entities\Player.class
+com\starbattle\controller\GameController.class
+com\starbattle\model\entities\ManaUser.class
+com\starbattle\factory\PlayerClass.class
+com\starbattle\model\entities\Clone.class
+com\starbattle\model\abilities\SpecialSkill.class
+com\starbattle\model\entities\Team.class
+com\starbattle\model\entities\Wookie.class

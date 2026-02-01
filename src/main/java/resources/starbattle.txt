@@ -1,0 +1,725 @@
+package com.starbattle.controller;
+
+import com.starbattle.factory.PlayerClass;
+import com.starbattle.factory.PlayerFactory;
+import com.starbattle.model.entities.Player;
+import com.starbattle.model.entities.Team;
+import com.starbattle.model.game.Arena;
+import com.starbattle.view.GameView;
+
+public class GameController {
+    private Arena arena = new Arena();
+    private GameView view = new GameView();
+
+    public void initGame(){
+        boolean running = true;
+
+        while(running){
+            boolean start = view.lobby();
+
+            if(!start){
+                view.goodbyeMessage();
+                break;
+            }
+
+            RegisterResult op = registerPlayer();
+
+            if(op == RegisterResult.START){
+                runGame();
+                arena.reset();
+            }else{
+                view.goodbyeMessage();
+                running = false;
+            }
+        }
+    }
+    
+    public RegisterResult registerPlayer(){
+        while (true) { 
+            String name = view.requestName();
+
+            Team team = view.requestTeam();
+
+            PlayerClass type = view.requestClass();
+
+            arena.addPlayer(PlayerFactory.create(type, name, team), team); 
+
+            view.createdPlayerMessage();
+
+            int op = view.secondMenu();
+
+            if(op ==  2){
+                return RegisterResult.START;
+            }else if(op == 3){
+                return RegisterResult.EXIT;
+            }
+        }
+    }
+
+    public void runGame(){
+        gameloop:
+        while(arena.matchOngoing()){
+
+            view.roundInit(arena.getRound());
+
+            for(Team t : Team.values()){
+                for(Player p : arena.getPlayers(t)){
+                    view.roundInit(arena.getRound());
+                    Player target = arena.getTarget(t);
+                    int act = view.getAction(p, target);
+                    switch (act) {
+                        case 1 -> {
+                            p.attack(target);
+                            view.attackMessage(p);
+                        } 
+                        case 2 -> {
+                            int i = view.getSkill(p);
+                            p.useSkill(target, i);
+                        }
+                        default -> view.skipTurn(p);
+                    }
+
+                    if(!arena.matchOngoing()){
+                        Team winner = arena.winner();
+                        view.showWinner(winner);
+                        break gameloop;
+                    }
+                }
+            }
+            int round = arena.nextRound();
+            view.showRound(round);
+        }
+    }
+
+}
+
+
+==========================================================
+
+package com.starbattle.controller;
+
+public enum RegisterResult {
+    START,
+    EXIT
+}
+
+==========================================================
+
+package com.starbattle.factory;
+
+public enum PlayerClass {
+    JEDI,
+    WOOKIE,
+    CLONE;
+
+    public static String listClasses(){
+        String txt = "";
+        for(PlayerClass c : PlayerClass.values()){
+            txt += c.name() +", ";
+        }
+
+        return txt;
+    }
+}
+
+
+==========================================================
+
+package com.starbattle.factory;
+
+import com.starbattle.model.entities.Clone;
+import com.starbattle.model.entities.Jedi;
+import com.starbattle.model.entities.Player;
+import com.starbattle.model.entities.Team;
+import com.starbattle.model.entities.Wookie;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
+
+public class PlayerFactory {
+    private static final Map<PlayerClass , BiFunction<String, Team, Player>> registry = new HashMap<>();
+
+    static{
+        registry.put(PlayerClass.JEDI, Jedi::new);
+        registry.put(PlayerClass.WOOKIE, Wookie::new);
+        registry.put(PlayerClass.CLONE, Clone::new);
+    }
+
+    public static Player create(PlayerClass type, String name, Team team){
+        BiFunction<String, Team, Player> creator = registry.get(type);
+
+        if(creator == null){
+            throw new IllegalArgumentException("A classe "+ type+" não existe");
+        }
+
+        return creator.apply(name, team);
+    }
+}
+
+==========================================================
+
+package com.starbattle.model.abilities;
+
+import com.starbattle.model.entities.ManaUser;
+import com.starbattle.model.entities.Player;
+
+public class ForcePush implements SpecialSkill{
+    private final int manaCost = 20;
+    
+    @Override
+    public String getName(){
+        return "force push";
+    }
+
+    @Override
+    public void execute(Player user, Player target){
+        if(user instanceof ManaUser manaUser && manaUser.hasMana(manaCost)){
+            double finalDmg = user.getAtk() * 2.5;
+            target.recieveAttack(finalDmg);
+            manaUser.consumeMana(manaCost);
+        }
+    }
+
+    @Override
+    public String skillDesc(Player user, double dmg){
+        return user.getName() + ": Force push !!!!\n==SISTEMA: Force push causou "+ dmg +" de dano!==";
+    }
+}
+
+
+==========================================================
+
+package com.starbattle.model.abilities;
+
+import com.starbattle.model.entities.Player;
+
+public interface SpecialSkill {
+    String getName();
+
+    void execute(Player user, Player target);
+
+    String skillDesc(Player user, double dmg);
+}
+
+==========================================================
+
+package com.starbattle.model.entities;
+
+import java.util.Random;
+
+public class Clone extends Player{
+    private int crit;
+
+    public Clone(String n, Team t){
+        super(n, 160,30,70,t);
+        this.crit = 45;
+    }
+
+    @Override
+    public void attack(Player target){
+        Random rd = new Random();
+        boolean critHit = rd.nextDouble() < 0.35;
+        if(critHit){
+            double dmg = atk*(1 + crit/100);
+            target.recieveAttack(dmg);
+        }else{
+            target.recieveAttack(atk);
+        }
+        
+    }
+
+    @Override
+    public String attackDesc(){
+        Random rd = new Random();
+        boolean critHit = rd.nextDouble() < 0.35;
+        if(critHit){
+            return name + ": Headshot.";
+        }else{
+            return name + ": Na mira.";
+        }
+    }
+}
+
+
+==========================================================
+
+package com.starbattle.model.entities;
+
+import com.starbattle.model.abilities.ForcePush;
+
+public class Jedi extends Player implements ManaUser{
+    private final float maxMana;
+    private float mana;
+
+    public Jedi(String n, Team t){
+        super(n, 160, 25, 30, t);
+        this.maxMana = 200;
+        this.mana = maxMana;
+        skills.add(new ForcePush());
+    }
+
+    @Override
+    public float getmana() {
+        return mana;
+    }
+
+    @Override
+    public void attack(Player target){
+        target.recieveAttack(atk);
+    }
+
+    @Override
+    public void consumeMana(int quantity){
+        mana -= quantity;
+    }
+
+    @Override
+    public String attackDesc(){
+        return "SISTEMA: O Jedi " + name + "está atacando com seu sabre!";
+    }
+}
+
+==========================================================
+
+package com.starbattle.model.entities;
+
+public interface ManaUser {
+    float getmana();
+
+    void consumeMana(int quantity);
+
+    default boolean hasMana(int quantity){
+        return getmana() >= 0;
+    }
+}
+
+==========================================================
+
+package com.starbattle.model.entities;
+
+import com.starbattle.model.abilities.SpecialSkill;
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class Player{
+    protected String name;
+    protected final int mlife;
+    protected int clife;
+    protected int def;
+    protected int atk;
+    protected Team team;
+    protected List<SpecialSkill> skills =  new ArrayList<>();
+
+
+    public Player(String n, int l, int de, int at, Team t){
+        this.name = n;
+        this.mlife = l;
+        this.def = de;
+        this.atk = at;
+        this.team = t;
+        this.clife = mlife;
+    }
+
+    public void setName(String n){
+        this.name = n;
+    }
+
+    public void setTeam(Team t){
+        this.team = t;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public int getAtk(){
+        return atk;
+    }
+
+    public int getClife(){
+        return clife;
+    }
+
+    public Team getTeam(){
+        return team;
+    }
+
+    public boolean hasSkill(){
+        return !skills.isEmpty();
+    }
+
+    public List<SpecialSkill> getSkills(){
+        return skills;
+    }
+
+    public boolean isAlive(){
+        return clife > 0;
+    }
+
+    public abstract void attack(Player target);
+
+    public void recieveAttack(double  dam){
+        double finalDam = dam * (1 - def/100);
+
+        if(finalDam > 0){
+            clife -= finalDam;
+        }
+    }
+
+    public void useSkill(Player target, int i){
+        SpecialSkill skill = skills.get(i);
+        skill.execute(this, target);
+    }
+
+    public String attackDesc(){
+        return "Sistema: " + name + " esta atacando!";
+    }
+
+    public String damageDesc(double dam){
+        double finalDam = dam * (1 - def/100);
+
+        if(finalDam > 0){
+            return name + ": Ouch";
+        }else{
+            return name +": O que foi esse vento?";
+        }
+    }
+
+}
+
+==========================================================
+
+package com.starbattle.model.entities;
+
+public enum Team {
+    LIGHT,
+    DARK;
+
+    public Team next(){
+        return values()[(ordinal() + 1) % values().length];
+    }
+
+    public static String listTeams(){
+        String txt = "";
+        for(Team t : Team.values()){
+            txt += t.name() +", ";
+        }
+
+        return txt;
+    }
+}
+
+==========================================================
+
+package com.starbattle.model.entities;
+
+public class Wookie extends Player{
+    private final int maxVim;
+    private int vim;
+
+    public Wookie(String n, Team t){
+        super(n, 250, 50, 20, t);
+        this.maxVim = 100;
+        vim = maxVim;
+    }
+
+    @Override
+    public void attack(Player target){
+        target.recieveAttack(atk);
+    }
+
+    @Override
+    public void recieveAttack(double dam){
+        double finalDam = (dam * (1 - def/100));
+
+        if(finalDam > 0){
+            if((clife -= finalDam) <= (this.getClife()*(1-10/100))){
+                clife += vim;
+                vim = 0;
+            }
+            clife -= finalDam;
+        }
+    }
+
+    @Override
+    public String attackDesc(){
+        return name + ": HWAAAAAARR";
+    }
+
+    @Override
+    public String damageDesc(double dam){
+        double finalDam = dam * (1 - def/100);
+
+        if(finalDam > 0){
+            return name + ": HWOOOORRRRRR";
+        }else{
+            return name +": Hwar??";
+        }
+    }
+}
+
+==========================================================
+
+package com.starbattle.model.game;
+
+import com.starbattle.model.entities.Player;
+import com.starbattle.model.entities.Team;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
+
+public class Arena {
+    private final Map<Team, List<Player>> teams = new HashMap<>();
+    private List<Player> players = new ArrayList<>();
+    private int round;
+    private Team winner;
+
+    public Arena(){
+        for(Team t : Team.values()){
+            teams.put(t, new ArrayList<>());
+        }
+        round = 1;
+    }
+
+    public void reset(){
+        teams.clear();
+        round = 1;
+    }
+
+    public int getRound(){
+        return round;
+    }
+
+    public void addPlayer(Player p, Team t){
+        teams.get(t).add(p);
+    }
+
+    public void removePlayer(Player p, Team t){
+        teams.get(t).remove(p);
+    }
+
+    public List<Player> getPlayers(Team t){
+        return teams.get(t);
+    }
+
+    public int playersAlive(Team t){
+        int alive = 0;
+        for(Player p : teams.get(t)){
+            if(p.getClife() > 0){
+                alive++;
+            }
+        }
+        return alive;
+    }
+
+    public int nextRound(){
+        round++;
+        return round;
+    }
+
+    public boolean matchOngoing(){
+        return playersAlive(Team.LIGHT) > 0 && playersAlive(Team.DARK) > 0;
+
+    }
+
+    public Team winner(){
+        if(playersAlive(Team.DARK) > 0 && playersAlive(Team.LIGHT) == 0){
+            winner = Team.DARK;
+        }else if(playersAlive(Team.LIGHT) > 0 && playersAlive(Team.DARK) == 0){
+            winner = Team.LIGHT;
+        }
+        return winner;
+    }
+
+    public Player getTarget(Team t){
+        List<Player> alive = new ArrayList<>();
+
+        for(Player p : teams.get(t.next())){
+            if(p.getClife() > 0){
+                alive.add(p);
+            }else{
+                removePlayer(p, t);
+            }
+        }
+
+        if(alive.isEmpty()){
+            winner = t;
+        }
+
+        int i = ThreadLocalRandom.current().nextInt(alive.size());
+        return alive.get(i);
+    }
+}
+
+==========================================================
+
+package com.starbattle.view;
+
+import com.starbattle.factory.PlayerClass;
+import com.starbattle.model.abilities.SpecialSkill;
+import com.starbattle.model.entities.ManaUser;
+import com.starbattle.model.entities.Player;
+import com.starbattle.model.entities.Team;
+import java.util.Scanner;
+
+public class GameView {
+    private Scanner input = new Scanner(System.in);
+
+    public boolean lobby(){
+        while(true){
+            System.out.println("========= BEM VINDOS À ARENA!! =========\nO que deseja fazer?\n1- Iniciar partida\n2- Sair");
+            try {
+                int op = Integer.parseInt(input.nextLine());
+
+                if (op == 1) {
+                    System.out.println("Ótimo!! Vamos iniciar adicionando os combatentes: ");
+                    return true;
+                }else{
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("##################### Informe um valor numérico válido #####################");
+            }
+        }
+    }
+    
+    public String requestName(){
+        System.out.println("\n---> Insira o nome do jogador: ");
+        return input.nextLine();
+    }
+
+    public Team requestTeam(){
+        while(true){
+            try {
+                System.out.println("---> Insira o time do jogador ("+ Team.LIGHT.name() + " | " + Team.DARK.name() + "):");
+                return Team.valueOf(input.nextLine().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("##################### Informe um tipo válido de time: ("+ Team.listTeams() +") #####################");
+            }
+        }
+    }
+
+    public PlayerClass requestClass(){
+        while (true) { 
+            try {
+                System.out.println("Selecione a classe do jogador: (Jedi | Wookie | Clone)");
+                return PlayerClass.valueOf(input.nextLine().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Informe um tipo válido de time: ("+ PlayerClass.listClasses() +")");
+            }
+        }
+    }
+
+    public void createdPlayerMessage(){
+        System.out.println("\nO jogador foi criado!!\n");
+    }
+
+    public int secondMenu(){
+        while(true){
+            try {
+                System.out.println("\nO que deseja fazer agora?\n1- Cadastrar novo jogador\n2- Iniciar partida\n3- Sair");
+                return Integer.parseInt(input.nextLine());
+            }catch (NumberFormatException e) {
+                System.out.println("##################### Informe um valor numérico válido #####################");
+            }
+        } 
+    }
+
+    public void goodbyeMessage(){
+        System.out.println("Tchau tchau !!");
+    }
+    
+    public void showRound(int round){
+        System.out.println("\n=====> ROUND "+ round);
+    }
+
+    public void roundInit(int round){
+        System.out.println("SISTEMA: Round "+round+" iniciado!");
+    }
+
+    public int getAction(Player user, Player target){
+        while (true) { 
+            int act;
+
+            try {
+                if(user.getSkills() != null){
+                    System.out.println("\n---> PLAYER:  "+user.getName()+"\n---> ALVO: "+target.getName()+"!!!\nO que quer fazer?\n1-Atacar\n2-Usar skill\n3- Pular vez");
+                    act = Integer.parseInt(input.nextLine());
+                }else{
+                    System.out.println("\n---> PLAYER:  "+user.getName()+"\n---> ALVO: "+target.getName()+"!!!\nO que quer fazer?\n1-Atacar\n2- Pular vez");
+                    act = Integer.parseInt(input.nextLine());
+                }
+                return act;
+
+            } catch (NumberFormatException e) {
+                System.out.println("##################### Informe um valor numérico válido #####################");
+            }
+        }
+    }
+
+    public int getSkill(Player user){
+       while (true) { 
+            try {
+                String txt = "";
+                for(SpecialSkill s : user.getSkills()){
+                    int i = 1;
+                    txt = i + "- " + s.getName() + "\n";
+                }
+                System.out.println("Selecione a skill que deseja usar: \n"+txt);
+                int i = Integer.parseInt(input.nextLine());
+
+                return i-1;            
+            } catch (NumberFormatException e) {
+                System.out.println("##################### Informe um valor numérico válido #####################");
+            }
+       }
+    }
+
+    public void attackMessage(Player user){
+        user.attackDesc();
+    }
+
+    public void skillMessage(Player user,SpecialSkill skill,double dmg, int manaCost){
+        if(!(user instanceof ManaUser manaUser)){
+            System.out.println("SISTEMA: O combatente tem que ser um usuário de mana para usar isso !");
+
+        }else if(!manaUser.hasMana(manaCost)){
+            System.out.println("SISTEMA: Você não tem mana o suficiente!");
+            
+        }else{
+            System.out.println(skill.skillDesc(user, dmg));
+        }
+    }
+
+    public String skipTurn(Player user){
+        return "Sistema: " + user.getName() + ": Melhor deixar para lá...";
+    }
+
+    public void damageMessage(Player reciever, double dam){
+        reciever.damageDesc(dam);
+    }
+
+    public void noSkillAvaible(){
+        System.out.println("SISTEMA: Eita, parece que você não tem nenhuma habilidade ativa no momento...");
+    }
+
+    public void showWinner(Team winner){
+        System.out.println("O time " + winner.name() + " triunfou sobre seus inimigos !!\nA arena os consagra vencedores.");
+    }
+}
+
+==========================================================
+
+package com.starbattle;
+
+import com.starbattle.controller.GameController;
+
+public class main{
+    public static void main(String[] args) {
+        GameController controller = new GameController();
+
+        controller.initGame();
+    }
+}
