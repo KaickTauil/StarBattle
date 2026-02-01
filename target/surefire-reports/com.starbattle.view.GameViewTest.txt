@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: com.starbattle.model.game.ArenaTest
+Test set: com.starbattle.view.GameViewTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in com.starbattle.model.game.ArenaTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in com.starbattle.view.GameViewTest
