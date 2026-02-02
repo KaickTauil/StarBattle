@@ -1,9 +1,9 @@
 com\starbattle\model\game\Arena.class
 com\starbattle\factory\PlayerFactory.class
 com\starbattle\view\GameView.class
-com\starbattle\main.class
 com\starbattle\model\abilities\ForcePush.class
 com\starbattle\controller\RegisterResult.class
+com\starbattle\Main.class
 com\starbattle\model\entities\Jedi.class
 com\starbattle\model\entities\Player.class
 com\starbattle\controller\GameController.class

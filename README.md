@@ -32,3 +32,7 @@ Jogabilidade:
 
         - Clone:
             * Headshot - clones tem 45% de chance de causar um acerto crítico ao atacar, o dano do acerto crítico é calculado somando o ataque do usuário ao seu atributo de dano crítico percentual.
+
+Documentação:
+
+    1- CRC Cards: https://starbattle-crc-cards.my.canva.site/
